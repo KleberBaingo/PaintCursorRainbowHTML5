@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+
+<body>
+  <canvas id="draw" width="800" height="800"></canvas>
+
+  <script>
+
+
+    // criando o painel
+    const canvas = document.querySelector('#draw');
+    //criando a variavel de contexto 2d
+    const ctx = canvas.getContext('2d');
+
+    // limitando o tamanho do painel
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // estilo do pincel
+    ctx.strokeStyle = '#BADA55';
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 50;
+
+    // posição inicial do pincel
+    let mouseX = 0;
+    let mouseY = 0;
+    let hue = 0;
+    let direction = true;
+
+
+    // variavel de controle de desnho da linha
+    let isDrawing = false;
+
+    //função de pintar
+    function draw(event) {
+      if (!isDrawing) {
+        return; // para a função quando o mouse nao esta clicado
+      }
+
+      /*  // mesma coisa que a linha acima
+         mouseX = event.offsetX;
+         mouseY = event.offsetY; */
+
+      ctx.strokeStyle = `hsl(${hue}, 100%,50%)`
+      ctx.beginPath();
+      //começaar de
+      ctx.moveTo(mouseX, mouseY);
+      //ir para
+      ctx.lineTo(event.offsetX, event.offsetY);
+      ctx.stroke();
+      [mouseX, mouseY] = [event.offsetX, event.offsetY];
+      hue++;
+
+
+      if (hue >= 360) hue = 0;
+
+
+      if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) direction = !direction;
+
+      /*  MESMA COISA QUE A LINHA ACIMA
+       if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+          direction = !direction;
+        } */
+
+      (direction) ? ctx.lineWidth++ : ctx.lineWidth--;
+
+      /*       
+
+      mesma coisa que a linha acima
+            if (direction) {
+              ctx.lineWidth++;
+            } else {
+              ctx.lineWidth--;
+            }
+      
+       */
+      console.log(ctx.lineWidth);
+
+
+    }
+
+
+    // eventos do mouse para desenhar ou parar de desenhar
+    canvas.addEventListener('mousedown', (event) => {
+      isDrawing = true;
+      // para nao começar no x e y = 0 e atualizar a cada click e nao ter linha fantasma
+      [mouseX, mouseY] = [event.offsetX, event.offsetY];
+
+    });
+
+
+
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseout', () => isDrawing = false);
+
+
+
+
+
+  </script>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+    }
+  </style>
+
+</body>
+
+</html>
